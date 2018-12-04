@@ -18,9 +18,10 @@ public class Categoria implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-	private List<Produto> produtos = new ArrayList<>();
 	
 	@ManyToMany(mappedBy= "categorias")
+	private List<Produto> produtos = new ArrayList<>();
+	
 
 	@Override
 	public int hashCode() {
