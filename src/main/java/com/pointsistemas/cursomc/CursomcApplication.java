@@ -13,14 +13,20 @@ import com.pointsistemas.cursomc.domain.Cidade;
 import com.pointsistemas.cursomc.domain.Cliente;
 import com.pointsistemas.cursomc.domain.Endereco;
 import com.pointsistemas.cursomc.domain.Estado;
+import com.pointsistemas.cursomc.domain.Pagamento;
+import com.pointsistemas.cursomc.domain.PagamentoComBoleto;
+import com.pointsistemas.cursomc.domain.PagamentoComCartao;
 import com.pointsistemas.cursomc.domain.Pedido;
 import com.pointsistemas.cursomc.domain.Produto;
+import com.pointsistemas.cursomc.domain.enums.EstadoPagamento;
 import com.pointsistemas.cursomc.domain.enums.TipoCliente;
 import com.pointsistemas.cursomc.repositories.CategoriaRepository;
 import com.pointsistemas.cursomc.repositories.CidadeRepository;
 import com.pointsistemas.cursomc.repositories.ClienteRepository;
 import com.pointsistemas.cursomc.repositories.EnderecoRepository;
 import com.pointsistemas.cursomc.repositories.EstadoRepository;
+import com.pointsistemas.cursomc.repositories.PagamentoRepository;
+import com.pointsistemas.cursomc.repositories.PedidoRepository;
 import com.pointsistemas.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -28,6 +34,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
@@ -99,6 +111,17 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2018 10:20"), cli1, e1);
 		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2018 19:30"), cli1, e2);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2018 00:00"), null);
+		ped2.setPagamento(pagto2);
+		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
 	}
 	
 	
